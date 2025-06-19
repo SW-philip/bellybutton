@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-TARGET_DIR="${1:-$HOME/floodshell/bin}"
+TARGET_DIR="${1:-$HOME/.local/bin}"
 IGNORE_FILE="$TARGET_DIR/.lintignore"
 BRIEF_MODE="${2:-}"
 
