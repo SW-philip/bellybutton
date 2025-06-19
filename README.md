@@ -64,7 +64,7 @@ paru -S bellybutton
 ## 📂 Usage
 
 ```bash
-grammar                 # Lints ~/floodshell/bin (default)
+grammar                 # Lints ~/.local/bin (default)
 grammar ~/my/scripts    # Lint a custom directory
 grammar --brief         # Hide long-form output
 grammar --no-prompt     # Skip ESLint autofix prompt
