@@ -53,6 +53,12 @@ npm install -g eslint
 cargo install cargo-clippy
 yay -S golangci-lint-bin
 ```
+## 🧠 Install via AUR
+
+```bash
+yay -S bellybutton
+# or
+paru -S bellybutton
 
 ## 📂 Usage
 
