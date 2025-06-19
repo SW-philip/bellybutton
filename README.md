@@ -59,6 +59,7 @@ yay -S golangci-lint-bin
 yay -S bellybutton
 # or
 paru -S bellybutton
+```
 
 ## 📂 Usage
 
