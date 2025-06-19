@@ -7,7 +7,7 @@ BRIEF_MODE="${2:-}"
 
 printf "📦 Scanning: %s\n" "$TARGET_DIR"
 
-# Build find-exclude pattern from .lintignore
+# 🔕 Build exclude pattern
 EXCLUDES=()
 if [[ -f "$IGNORE_FILE" ]]; then
   while IFS= read -r line; do
@@ -16,15 +16,15 @@ if [[ -f "$IGNORE_FILE" ]]; then
   done < "$IGNORE_FILE"
 fi
 
-# ShellCheck
+# 🐚 ShellCheck
 printf "🔍 Checking shell scripts...\n"
 sh_issues=$(find "$TARGET_DIR" "${EXCLUDES[@]}" -type f -name '*.sh' -exec shellcheck {} + 2>/dev/null || true)
 sh_count=$(echo "$sh_issues" | grep -c '^In ' || true)
 [[ "$BRIEF_MODE" != "--brief" ]] && echo "$sh_issues"
 
-# ESLint
+# 📜 ESLint
 js_count=0
-if command -v eslint >/dev/null; then
+if command -v eslint &>/dev/null; then
   printf "\n🔍 Checking JavaScript with ESLint...\n"
   js_issues=$(find "$TARGET_DIR" "${EXCLUDES[@]}" -type f -name '*.js' -exec eslint {} + 2>/dev/null || true)
   js_count=$(echo "$js_issues" | grep -c '^\s\+[0-9]' || true)
@@ -40,9 +40,9 @@ else
   echo "⚠️  ESLint not found. Skipping JS lint."
 fi
 
-# Ruff
+# 🐍 Ruff
 py_count=0
-if command -v ruff >/dev/null; then
+if command -v ruff &>/dev/null; then
   printf "\n🐍 Checking Python with Ruff...\n"
   py_issues=$(find "$TARGET_DIR" "${EXCLUDES[@]}" -type f -name '*.py' -exec ruff check {} + 2>/dev/null || true)
   py_count=$(echo "$py_issues" | grep -c '^[^[:space:]]\+:[0-9]' || true)
@@ -51,9 +51,9 @@ else
   echo "⚠️  Ruff not found. Skipping Python lint."
 fi
 
-# Go
+# 🐹 Go
 go_count=0
-if command -v golangci-lint >/dev/null; then
+if command -v golangci-lint &>/dev/null; then
   printf "\n🐹 Checking Go with golangci-lint...\n"
   go_output=$(golangci-lint run "$TARGET_DIR" 2>&1 || true)
   if echo "$go_output" | grep -q 'no go files to analyze'; then
@@ -67,9 +67,9 @@ else
   echo "⚠️  golangci-lint not found. Skipping Go lint."
 fi
 
-# Rust
+# 🦀 Rust
 rs_count=0
-if command -v cargo >/dev/null && [[ -f "$TARGET_DIR/Cargo.toml" ]]; then
+if command -v cargo &>/dev/null && [[ -f "$TARGET_DIR/Cargo.toml" ]]; then
   printf "\n🦀 Checking Rust with cargo clippy...\n"
   rs_output=""
   cd "$TARGET_DIR" && rs_output=$(cargo clippy --message-format=short 2>&1 || true)
@@ -84,7 +84,7 @@ else
   echo "⚠️  Rust project or cargo not found. Skipping Rust lint."
 fi
 
-# Shebang fixer
+# 🔒 Shebang fixer
 printf "\n🔒 Checking executable bits...\n"
 while IFS= read -r -d '' file; do
   if [[ -x "$file" && ! $(head -n1 "$file") =~ ^#! ]]; then
@@ -97,11 +97,11 @@ while IFS= read -r -d '' file; do
   fi
 done < <(find "$TARGET_DIR" "${EXCLUDES[@]}" -type f -perm -u+x -print0)
 
-# Symlink checker
+# 🔗 Symlink checker
 printf "\n🔗 Checking broken symlinks...\n"
 find "$TARGET_DIR" -xtype l -print || true
 
-# Summary
+# 🧾 Final Summary
 printf "\n🧾 Bellybutton Clean:\n"
 echo "✅ Shell: $sh_count issues"
 echo "✅ JavaScript: $js_count issues"
@@ -109,6 +109,6 @@ echo "✅ Python: $py_count issues"
 echo "✅ Go: $go_count issues"
 echo "✅ Rust: $rs_count issues"
 
-if command -v notify-send >/dev/null; then
+if command -v notify-send &>/dev/null; then
   notify-send "Bellybutton Scan Complete" "Shell: $sh_count, JS: $js_count, Python: $py_count, Go: $go_count, Rust: $rs_count"
 fi
