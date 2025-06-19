@@ -79,20 +79,6 @@ old_script.sh
 legacy/*.py
 ```
 
-## 📤 Publishing
-
-If you’re feeling bold:
-
-```bash
-git init
-git remote add origin https://github.com/YOUR_USERNAME/bellybutton.git
-git add .
-git commit -m "Initial release of bellybutton"
-git push -u origin main
-```
-
----
-
 ## 🤘 Author
 
 Phil Repko. Breaking your shell so you can rebuild it stronger.
